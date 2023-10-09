@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Notion::Rails do
+RSpec.describe NotionRails do
   it "has a version number" do
-    expect(Notion::Rails::VERSION).not_to be nil
+    expect(NotionRails::VERSION).not_to be nil
   end
 
   it "does something useful" do
