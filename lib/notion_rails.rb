@@ -10,7 +10,7 @@ require 'dry-configurable'
 module NotionRails
   extend Dry::Configurable
 
-  setting :database_id
   setting :notion_api_token
+  setting :notion_database_id
   setting :cache_store, default: ActiveSupport::Cache::MemoryStore.new
 end

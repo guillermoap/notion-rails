@@ -51,7 +51,7 @@ module NotionRails
     end
 
     def get_article(id)
-      base_page = NotionRails::BasePage.new(__get_article(id))
+      base_page = NotionRails::BasePage.new(__get_page(id))
       base_blocks = NotionRails.config.cache_store.fetch(id) { get_blocks(id) }
       NotionRails::Page.new(base_page, base_blocks)
     end
@@ -90,7 +90,7 @@ module NotionRails
 
     def __get_articles(tag: nil, slug: nil, page_size: 10)
       @client.database_query(
-        database_id: NotionRails.config.database_id,
+        database_id: NotionRails.config.notion_database_id,
         sorts: [
           default_sorting
         ],
@@ -101,7 +101,7 @@ module NotionRails
       )
     end
 
-    def __get_article(id)
+    def __get_page(id)
       @client.page(page_id: id)
     end
 
