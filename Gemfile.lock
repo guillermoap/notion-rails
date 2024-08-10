@@ -3,6 +3,7 @@ PATH
   specs:
     notion_rails (0.1.0)
       actionview (~> 7.0.0)
+      activesupport (~> 7.0.0)
       dry-configurable (~> 1.2)
       notion-ruby-client (~> 1.2.2)
 
