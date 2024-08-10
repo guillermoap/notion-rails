@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Notion
+module NotionRails
   class Page
-    include Notion::Renderers
+    include NotionRails::Renderers
 
     attr_reader :metadata, :blocks
 

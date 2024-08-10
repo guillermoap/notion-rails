@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-module Notion
+require 'action_view'
+
+module NotionRails
   module Renderers
     include ActionView::Helpers::AssetTagHelper
     include ActionView::Helpers::TagHelper

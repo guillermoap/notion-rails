@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-module Notion
+module NotionRails
   class BasePage
-    include Notion::Renderers
+    include NotionRails::Renderers
+
     # TODO: validate object type is page
     attr_reader :id,
       :created_time,

@@ -2,7 +2,7 @@
 
 module NotionRails
   class BaseBlock
-    include Notion::Renderers
+    include NotionRails::Renderers
 
     # TODO: validate object type is block
 

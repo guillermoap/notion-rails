@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module Notion
+module NotionRails
   class Service
     def initialize
-      @client = Notion::Client.new
+      @client = Notion::Client.new(token: NotionRails.config.notion_api_token)
     end
 
-    def default_query
+    def default_query(slug: nil, tag: nil)
       query = [
         {
           property: 'public',
