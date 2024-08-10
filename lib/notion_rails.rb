@@ -12,4 +12,5 @@ module NotionRails
 
   setting :database_id
   setting :notion_api_token
+  setting :cache_store, default: ActiveSupport::Cache::MemoryStore.new
 end
