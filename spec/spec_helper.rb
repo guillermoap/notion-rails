@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
+require 'byebug'
+require 'dotenv/load'
+require 'notion-ruby-client'
 require 'notion_rails'
+Dir[File.join(File.dirname(__FILE__), 'support', '**/*.rb')].sort.each { |file| require file }
+
+NotionRails.configure do |config|
+  config.notion_api_token = ENV['NOTION_API_TOKEN']
+  config.notion_database_id = ENV['NOTION_DATABASE_ID']
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
