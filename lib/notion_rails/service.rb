@@ -6,7 +6,7 @@ module Notion
       @client = Notion::Client.new
     end
 
-    def get_articles(tag: nil, slug: nil, page_size: 10)
+    def default_query
       query = [
         {
           property: 'public',
@@ -22,32 +22,42 @@ module Notion
         }
       ]
 
-      query.push({
-        property: 'slug',
-        rich_text: {
-          equals: slug,
-        }
-      }) if slug
+      if slug
+        query.push({
+          property: 'slug',
+          rich_text: {
+            equals: slug
+          }
+        })
+      end
+
+      return unless tag
 
       query.push({
         property: 'tags',
         multi_select: {
-          contains: tag,
+          contains: tag
         }
-      }) if tag
+      })
+    end
 
+    def default_sorting
+      {
+        property: 'published',
+        direction: 'descending'
+      }
+    end
+
+    def get_articles(tag: nil, slug: nil, page_size: 10)
       pages = @client.database_query(
-        database_id: Rails.application.credentials.notion.database_id,
+        database_id: NotionRails.config.database_id,
         sorts: [
-          {
-            property: 'published',
-            direction: 'descending'
-          }
+          default_sorting
         ],
         filter: {
-          'and': query
+          'and': default_query
         },
-        page_size:
+        page_size: page_size
       )
       pages['results'].map { |page| Notion::BasePage.new(page) }
     end
@@ -64,18 +74,16 @@ module Notion
       results = []
       blocks['results'].each_with_index do |block, index|
         base_block = Notion::BaseBlock.new(block)
-        if base_block.has_children
-          base_block.children = get_blocks(base_block.id)
-        end
+        base_block.children = get_blocks(base_block.id) if base_block.has_children
         # Notion returns same list items as different blocks so we have to do some processing to have them be related
         # TODO: Separate this into a function, add support for bulleted items.
         #       Currently bulleted items render fine, but they do it in separate ul blocks
         #       Make them appear in the same ul block as numbered_items appear in the same ol block
         if %w[numbered_list_item].include? base_block.type
           siblings = !parent_list_block_index.nil? &&
-                      index != parent_list_block_index &&
-                      base_block.type == results[parent_list_block_index]&.type &&
-                      base_block.parent == results[parent_list_block_index]&.parent
+                     index != parent_list_block_index &&
+                     base_block.type == results[parent_list_block_index]&.type &&
+                     base_block.parent == results[parent_list_block_index]&.parent
           if siblings
             results[parent_list_block_index].siblings << base_block
             next
@@ -91,4 +99,3 @@ module Notion
     end
   end
 end
-
