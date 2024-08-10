@@ -1,6 +1,8 @@
-module NotionRails
+# frozen_string_literal: true
+
+module Notion
   class BasePage
-    include NotionRails::Renderers
+    include Notion::Renderers
     # TODO: validate object type is page
     attr_reader :id,
       :created_time,
@@ -12,9 +14,11 @@ module NotionRails
       :parent,
       :archived,
       :properties,
+      :published_at,
       :tags,
       :title,
       :slug,
+      :description,
       :url
 
     def initialize(data)
@@ -41,12 +45,22 @@ module NotionRails
       render_title(@title, options)
     end
 
+    def formatted_description(options = {})
+      render_paragraph(@description, options)
+    end
+
+    def formatted_published_at(options = {})
+      render_date(@published_at, options)
+    end
+
     private
 
     def process_properties
       @tags = @properties['tags']
       @title = @properties.dig('name', 'title')
       @slug = @properties['slug']
+      @published_at = @properties.dig('published', 'date', 'start')
+      @description = @properties.dig('description', 'rich_text')
     end
   end
 end

@@ -1,4 +1,6 @@
-module NotionRails
+# frozen_string_literal: true
+
+module Notion
   module Renderers
     include ActionView::Helpers::AssetTagHelper
     include ActionView::Helpers::TagHelper
@@ -23,25 +25,31 @@ module NotionRails
       classes.compact.join(' ')
     end
 
-    def text_renderer(properties)
+    def text_renderer(properties, options = {})
       properties.map do |rich_text|
         classes = annotation_to_css_class(rich_text['annotations'])
         if rich_text['href']
           link_to(
             rich_text['plain_text'],
             rich_text['href'],
-            class: "link #{classes}"
+            class: "link #{classes} #{options[:class]}"
           )
         elsif classes.present?
-          content_tag(:span, rich_text['plain_text'], class: classes)
+          content_tag(:span, rich_text['plain_text'], class: "#{classes} #{options[:class]}")
         else
-          rich_text['plain_text']
+          tag.span(rich_text['plain_text'], class: options[:class])
         end
       end
     end
 
     def render_title(title, options = {})
-      render_paragraph(title, options)
+      render_heading_1(title, options)
+    end
+
+    def render_date(date, options = {})
+      # TODO: handle end and time zone
+      # date=end=, start=2023-07-13, time_zone=, id=%5BsvU, type=date
+      tag.p(date.to_date.to_fs(:long), class: options[:class])
     end
 
     def render_paragraph(rich_text_array, options = {})
@@ -51,33 +59,31 @@ module NotionRails
     end
 
     def render_heading_1(rich_text_array, options = {})
-        content_tag(:h1, class: 'mb-4 mt-6 text-3xl font-semibold', **options) do
-          text_renderer(rich_text_array).join('').html_safe
-        end
+      content_tag(:h1, class: 'mb-4 mt-6 text-3xl font-semibold', **options) do
+        text_renderer(rich_text_array).join('').html_safe
+      end
     end
 
     def render_heading_2(rich_text_array, options = {})
-        content_tag(:h2, class: 'mb-4 mt-6 text-2xl font-semibold', **options) do
-          text_renderer(rich_text_array).join('').html_safe
-        end
+      content_tag(:h2, class: 'mb-4 mt-6 text-2xl font-semibold', **options) do
+        text_renderer(rich_text_array).join('').html_safe
+      end
     end
 
     def render_heading_3(rich_text_array, options = {})
-        content_tag(:h3, class: 'mb-2 mt-6 text-xl font-semibold', **options) do
-          text_renderer(rich_text_array).join('').html_safe
-        end
+      content_tag(:h3, class: 'mb-2 mt-6 text-xl font-semibold', **options) do
+        text_renderer(rich_text_array).join('').html_safe
+      end
     end
 
     def render_code(rich_text_array, options = {})
       # TODO: render captions
       pre_options = options
-      pre_options[:class] = "p-6 rounded #{pre_options[:class]}"
+      pre_options[:class] = "border-2 p-6 rounded #{pre_options[:class]}"
       content_tag(:div, class: 'mt-4', data: { controller: 'highlight' }) do
         content_tag(:div, data: { highlight_target: 'source' }) do
           content_tag(:pre, pre_options) do
-            content_tag(:code, options) do
-              text_renderer(rich_text_array).join('').html_safe
-            end
+            text_renderer(rich_text_array, options).join('').html_safe
           end
         end
       end
@@ -132,8 +138,10 @@ module NotionRails
       div_options[:class] = "mt-4 #{options[:class]}"
       content_tag(:div, div_options) do
         pre_options[:class] = "border-l-4 border-black px-5 py-1 #{options[:class]}"
-        content_tag(:cite, pre_options) do
-          text_renderer(rich_text_array).join('').html_safe
+        content_tag(:cite) do
+          content_tag(:p, pre_options) do
+            text_renderer(rich_text_array).join('').html_safe
+          end
         end
       end
     end
@@ -169,3 +177,4 @@ module NotionRails
     end
   end
 end
+

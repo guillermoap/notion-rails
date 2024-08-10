@@ -1,10 +1,12 @@
-module NotionRails
+# frozen_string_literal: true
+
+module Notion
   class Service
     def initialize
       @client = Notion::Client.new
     end
 
-    def get_articles(tag: nil, slug: nil)
+    def get_articles(tag: nil, slug: nil, page_size: 10)
       query = [
         {
           property: 'public',
@@ -44,14 +46,15 @@ module NotionRails
         ],
         filter: {
           'and': query
-        }
+        },
+        page_size:
       )
       pages['results'].map { |page| Notion::BasePage.new(page) }
     end
 
     def get_article(id)
       base_page = Notion::BasePage.new(@client.page(page_id: id))
-      base_blocks = get_blocks(id)
+      base_blocks = Rails.cache.fetch(id) { get_blocks(id) }
       Notion::Page.new(base_page, base_blocks)
     end
 
@@ -88,3 +91,4 @@ module NotionRails
     end
   end
 end
+
