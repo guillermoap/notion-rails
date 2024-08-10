@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'notion_rails/version'
 require 'notion_rails/service'
 require 'dry-configurable'
 
