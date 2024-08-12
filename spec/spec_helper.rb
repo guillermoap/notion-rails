@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require 'action_view'
 require 'byebug'
+require 'capybara/rspec'
 require 'dotenv/load'
 require 'notion-ruby-client'
 require 'notion_rails'
@@ -21,4 +23,5 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+  config.include Capybara::DSL
 end
