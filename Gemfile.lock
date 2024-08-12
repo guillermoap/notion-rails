@@ -67,6 +67,8 @@ GEM
       uri
     nokogiri (1.16.7-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.16.7-x86_64-linux)
+      racc (~> 1.4)
     notion-ruby-client (1.2.2)
       faraday (>= 2.0)
       faraday-mashify (>= 0.1.1)
@@ -131,6 +133,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-23
+  x86_64-linux
 
 DEPENDENCIES
   byebug
