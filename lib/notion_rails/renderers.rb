@@ -41,7 +41,7 @@ module NotionRails
         else
           tag.span(rich_text['plain_text'], class: options[:class])
         end
-      end
+      end.join('').html_safe
     end
 
     def render_title(title, options = {})
@@ -56,25 +56,25 @@ module NotionRails
 
     def render_paragraph(rich_text_array, options = {})
       content_tag(:p, options) do
-        text_renderer(rich_text_array).join('').html_safe
+        text_renderer(rich_text_array)
       end
     end
 
     def render_heading_1(rich_text_array, options = {})
       content_tag(:h1, class: 'mb-4 mt-6 text-3xl font-semibold', **options) do
-        text_renderer(rich_text_array).join('').html_safe
+        text_renderer(rich_text_array)
       end
     end
 
     def render_heading_2(rich_text_array, options = {})
       content_tag(:h2, class: 'mb-4 mt-6 text-2xl font-semibold', **options) do
-        text_renderer(rich_text_array).join('').html_safe
+        text_renderer(rich_text_array)
       end
     end
 
     def render_heading_3(rich_text_array, options = {})
       content_tag(:h3, class: 'mb-2 mt-6 text-xl font-semibold', **options) do
-        text_renderer(rich_text_array).join('').html_safe
+        text_renderer(rich_text_array)
       end
     end
 
@@ -85,7 +85,7 @@ module NotionRails
       content_tag(:div, class: 'mt-4', data: { controller: 'highlight' }) do
         content_tag(:div, data: { highlight_target: 'source' }) do
           content_tag(:pre, pre_options) do
-            text_renderer(rich_text_array, options).join('').html_safe
+            text_renderer(rich_text_array, options)
           end
         end
       end
@@ -96,7 +96,7 @@ module NotionRails
       pre_options[:class] = "list-disc break-words #{pre_options[:class]}"
       content_tag(:ul, pre_options) do
         content = content_tag(:li, options) do
-          text_renderer(rich_text_array).join('').html_safe
+          text_renderer(rich_text_array)
         end
         if children.present?
           res = children.map do |child|
@@ -118,7 +118,7 @@ module NotionRails
 
     def render_list_items(type, rich_text_array, siblings, children, options = {})
       content = content_tag(:li, options) do
-        text_renderer(rich_text_array).join('').html_safe
+        text_renderer(rich_text_array)
       end
       if children.present?
           res = children.map do |child|
@@ -142,7 +142,7 @@ module NotionRails
         pre_options[:class] = "border-l-4 border-black px-5 py-1 #{options[:class]}"
         content_tag(:cite) do
           content_tag(:p, pre_options) do
-            text_renderer(rich_text_array).join('').html_safe
+            text_renderer(rich_text_array)
           end
         end
       end
@@ -153,7 +153,7 @@ module NotionRails
       pre_options[:class] = "p-4 rounded bg-neutral-200 mt-4 #{pre_options[:class]}"
       content_tag(:div, pre_options) do
         content = tag.span(icon, class: 'pr-2')
-        content += text_renderer(rich_text_array).join('').html_safe
+        content += text_renderer(rich_text_array)
         content
       end
     end
@@ -161,7 +161,7 @@ module NotionRails
     def render_image(src, expiry_time, caption, type, options = {})
       content_tag(:figure, options) do
         content = tag.img(src:, alt: '')
-        content += tag.figcaption(text_renderer(caption).join('').html_safe)
+        content += tag.figcaption(text_renderer(caption))
         content
       end
     end
@@ -173,7 +173,7 @@ module NotionRails
         elsif type == 'external'
           tag.iframe(src:, allowfullscreen: true, class: 'w-full aspect-video')
         end
-        content += tag.figcaption(text_renderer(caption).join('').html_safe)
+        content += tag.figcaption(text_renderer(caption))
         content
       end
     end
