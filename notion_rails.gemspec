@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require_relative 'lib/notion_rails/version'
+
 Gem::Specification.new do |spec|
   spec.name = 'notion_rails'
-  spec.version = '0.1.0'
+  spec.version = NotionRails::VERSION
   spec.authors = ['Guillermo Aguirre']
   spec.email = ['guillermoaguirre@hey.com']
 
