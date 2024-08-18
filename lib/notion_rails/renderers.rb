@@ -19,7 +19,7 @@ module NotionRails
         when 'code'
           'inline-code' if annotations[key]
         when 'color'
-          "text-#{annotations['color']}-600" if annotations[key] != 'default'
+          "text-#{annotations["color"]}-600" if annotations[key] != 'default'
         else
           annotations[key] ? key : nil
         end
@@ -121,10 +121,10 @@ module NotionRails
         text_renderer(rich_text_array)
       end
       if children.present?
-          res = children.map do |child|
-            render_numbered_list_item(child.rich_text, child.siblings, child.children)
-          end
-          content += res.join('').html_safe
+        res = children.map do |child|
+          render_numbered_list_item(child.rich_text, child.siblings, child.children)
+        end
+        content += res.join('').html_safe
       end
       if siblings.present?
         content += siblings.map do |sibling|
@@ -160,7 +160,7 @@ module NotionRails
 
     def render_image(src, expiry_time, caption, type, options = {})
       content_tag(:figure, options) do
-        content = tag.img(src:, alt: '')
+        content = tag.img(src: src, alt: '')
         content += tag.figcaption(text_renderer(caption))
         content
       end
@@ -169,14 +169,13 @@ module NotionRails
     def render_video(src, expiry_time, caption, type, options = {})
       content_tag(:figure, options) do
         content = if type == 'file'
-          video_tag(src, controls: true)
-        elsif type == 'external'
-          tag.iframe(src:, allowfullscreen: true, class: 'w-full aspect-video')
-        end
+                    video_tag(src, controls: true)
+                  elsif type == 'external'
+                    tag.iframe(src: src, allowfullscreen: true, class: 'w-full aspect-video')
+                  end
         content += tag.figcaption(text_renderer(caption))
         content
       end
     end
   end
 end
-
