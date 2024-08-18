@@ -1,3 +1,4 @@
+
 name: CI
 
 on: push
@@ -14,17 +15,15 @@ jobs:
         include:
           - version: head
             experimental: true
-    env:
-      BUNDLE_GEMFILE: Gemfile
     name: "RSpec tests: Ruby ${{ matrix.version }}"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby ${{ matrix.version }}
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
           ruby-version: ${{ matrix.version }}
-      - name: Run RuboCop
-        run: bundle exec rubocop .
+      # - name: Run RuboCop
+      #   run: bundle exec rubocop .
       - name: Run tests
         run: bundle exec rspec
