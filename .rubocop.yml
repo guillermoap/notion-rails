@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
@@ -9,6 +9,6 @@ Style/StringLiteralsInInterpolation:
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
-  
+
 Layout/LineLength:
   Max: 120
