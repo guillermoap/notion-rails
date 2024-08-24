@@ -6,9 +6,10 @@ RSpec.describe NotionRails::Service do
   let(:service) { described_class.new }
 
   describe '#initialize' do
-    it 'initializes a Notion::Client' do
+    it 'initializes a Notion::Client with the correct token' do
       client = service.instance_variable_get(:@client)
       expect(client).to be_a(Notion::Client)
+      expect(client.token).to eq(NotionRails.config.notion_api_token)
     end
   end
 
@@ -121,6 +122,58 @@ RSpec.describe NotionRails::Service do
     it 'returns an array of blocks', vcr: { cassette_name: 'get_blocks' } do
       expect(subject).to be_an(Array)
       expect(subject.first).to be_a(NotionRails::BaseBlock)
+    end
+
+    it 'correctly handles lists of blocks with siblings', vcr: { cassette_name: 'get_blocks' } do
+      results = subject
+                .filter { _1.type == 'bulleted_list_item' }
+                .map { _1.children.count }
+      expect(results).to match([1, 0, 0, 2, 0])
+    end
+
+    context 'when an image block is not expired' do
+      before do
+        allow(service).to receive(:refresh_image?).and_return(false)
+        allow(service).to receive(:refresh_block).and_call_original
+      end
+
+      it 'does not refresh the block for the image', vcr: { cassette_name: 'get_blocks' } do
+        subject
+        expect(service).not_to have_received(:refresh_block)
+      end
+    end
+
+    context 'when an image block has expired' do
+      before do
+        allow(ActiveSupport::TimeWithZone).to receive(:past?).and_return(true)
+        allow(service).to receive(:refresh_block).and_call_original
+      end
+
+      it 'refreshes the block for the image ', vcr: { cassette_name: 'get_blocks' } do
+        subject
+        expect(service).to have_received(:refresh_block).once
+      end
+    end
+  end
+
+  describe '#refresh_image?' do
+    let(:data) { { 'type' => 'image', 'image' => { 'type' => 'file', 'file' => { 'expiry_time' => expiry_time } } } }
+    let(:expired_data) do
+      { 'type' => 'image', 'image' => { 'type' => 'file', 'file' => { 'expiry_time' => (Time.now + 1.week).iso8601 } } }
+    end
+    let(:expiry_time) { (Time.now - 1.hour).iso8601 }
+
+    it 'returns true if the image has expired' do
+      expect(service.refresh_image?(data)).to be true
+    end
+
+    it 'returns false if the image has not expired' do
+      expect(service.refresh_image?(expired_data)).to be false
+    end
+
+    it 'returns false for non-image types' do
+      data['type'] = 'text'
+      expect(service.refresh_image?(data)).to be false
     end
   end
 end

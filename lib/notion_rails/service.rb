@@ -52,7 +52,7 @@ module NotionRails
 
     def get_article(id)
       base_page = NotionRails::BasePage.new(__get_page(id))
-      base_blocks = NotionRails.config.cache_store.fetch(id) { get_blocks(id) }
+      base_blocks = get_blocks(id)
       NotionRails::Page.new(base_page, base_blocks)
     end
 
@@ -61,6 +61,7 @@ module NotionRails
       parent_list_block_index = nil
       results = []
       blocks['results'].each_with_index do |block, index|
+        block = refresh_block(block['id']) if refresh_image?(block)
         base_block = NotionRails::BaseBlock.new(block)
         base_block.children = get_blocks(base_block.id) if base_block.has_children
         # Notion returns same list items as different blocks so we have to do some processing to have them be related
@@ -86,6 +87,14 @@ module NotionRails
       results
     end
 
+    def refresh_image?(data)
+      return false unless data['type'] == 'image'
+      return false unless data.dig('image', 'type') == 'file'
+
+      expiry_time = data.dig('image', 'file', 'expiry_time')
+      expiry_time.to_datetime.past?
+    end
+
     private
 
     def __get_articles(tag: nil, slug: nil, page_size: 10)
@@ -106,7 +115,15 @@ module NotionRails
     end
 
     def __get_blocks(id)
-      @client.block_children(block_id: id)
+      NotionRails.config.cache_store.fetch(id) { @client.block_children(block_id: id) }
+    end
+
+    def __get_block(id)
+      @client.block(block_id: id)
+    end
+
+    def refresh_block(id)
+      __get_block(id)
     end
   end
 end

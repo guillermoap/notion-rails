@@ -509,4 +509,58 @@ http_interactions:
         sub 2","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"bullet
         sub 2","href":null}],"color":"default"}}],"next_cursor":null,"has_more":false,"type":"block","block":{},"request_id":"b484d3c9-aad6-4e63-be04-29849ddda2f2"}'
   recorded_at: Sat, 10 Aug 2024 07:49:00 GMT
+- request:
+    method: get
+    uri: https://api.notion.com/v1/blocks/a56ff39a-0099-4637-ae1e-57affc56e556
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Notion Ruby Client/1.2.2
+      Authorization:
+      - Bearer <NOTION_API_TOKEN>
+      Notion-Version:
+      - '2022-02-22'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 23 Aug 2024 23:55:02 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 8b7f07fc487dc1a0-EZE
+      Cf-Cache-Status:
+      - DYNAMIC
+      Etag:
+      - W/"425-Kpp7TDq5HML0JNeH/fe71sua8ps"
+      Vary:
+      - Accept-Encoding
+      X-Notion-Request-Id:
+      - 19cf7dd4-d7ee-4bc9-b15f-a74f0709143e
+      X-Powered-By:
+      - Express
+      Set-Cookie:
+      - __cf_bm=h2jFLR5PPA0Zux.Z0X_vl5yGcEdnh6.GLbYC0XNHSRY-1724457302-1.0.1.1-G8RywX1L7ggHWwS9Rfux.BsENNd28.OlZ5.JvN6ow_Y8cz1S2K.cHuBkpzoBuh9Bon7dstB4dbU_re3RLfCNZA;
+        path=/; expires=Sat, 24-Aug-24 00:25:02 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=Y1EoiGWntkL6pF2WrKmFk29Q4D9MoabnNHXsDGiRiKE-1724457302738-0.0.1.1-604800000;
+        path=/; domain=.notion.com; HttpOnly; Secure; SameSite=None
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"object":"block","id":"a56ff39a-0099-4637-ae1e-57affc56e556","parent":{"type":"page_id","page_id":"373eebc8-bcd7-4992-a1b3-174d39a6e6d4"},"created_time":"2023-09-16T20:43:00.000Z","last_edited_time":"2023-09-16T20:43:00.000Z","created_by":{"object":"user","id":"b37246c7-12d2-47b5-829a-6f2116c13c4e"},"last_edited_by":{"object":"user","id":"b37246c7-12d2-47b5-829a-6f2116c13c4e"},"has_children":false,"archived":false,"in_trash":false,"type":"image","image":{"caption":[],"type":"file","file":{"url":"https://prod-files-secure.s3.us-west-2.amazonaws.com/fa824482-b6be-4ccc-b78d-81cf16252f2f/44fb7742-e092-4b6d-a501-41b532da8102/3_empanadas.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240823%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20240823T235502Z&X-Amz-Expires=3600&X-Amz-Signature=571375721cea4e808505299d2a61d1bfe86e785ef4003ee21983301d10be2f80&X-Amz-SignedHeaders=host&x-id=GetObject","expiry_time":"2024-08-24T00:55:02.630Z"}},"request_id":"19cf7dd4-d7ee-4bc9-b15f-a74f0709143e"}'
+  recorded_at: Fri, 23 Aug 2024 23:55:02 GMT
 recorded_with: VCR 6.2.0
