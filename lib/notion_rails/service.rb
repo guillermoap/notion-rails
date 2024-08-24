@@ -88,8 +88,8 @@ module NotionRails
     end
 
     def refresh_image?(data)
-      return false if data['type'] == 'image'
-      return false if data.dig('image', 'type') == 'file'
+      return false unless data['type'] == 'image'
+      return false unless data.dig('image', 'type') == 'file'
 
       expiry_time = data.dig('image', 'file', 'expiry_time')
       expiry_time.to_datetime.past?

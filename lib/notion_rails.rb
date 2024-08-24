@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'active_support/all'
 require 'notion_rails/renderers'
 require 'notion_rails/base_block'
 require 'notion_rails/base_page'
