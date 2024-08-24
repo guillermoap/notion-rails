@@ -145,6 +145,15 @@ RSpec.describe NotionRails::Renderers do
       expect(rendered_html).to have_selector('p')
       expect(rendered_html).to have_selector('span.font-bold', text: 'Hello, world!')
     end
+
+    it 'adds custom CSS class to the paragraph' do
+      rich_text = [{ 'plain_text' => 'Hello, world!', 'annotations' => { 'bold' => true } }]
+      html = render_paragraph(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('p.custom-class')
+    end
   end
 
   describe '#render_image' do
@@ -157,6 +166,15 @@ RSpec.describe NotionRails::Renderers do
       expect(rendered_html).to have_selector('figure')
       expect(rendered_html).to have_selector('img[src="image_src.jpg"]')
       expect(rendered_html).to have_selector('figcaption', text: 'An image caption')
+    end
+
+    it 'adds custom CSS class to the image' do
+      caption = [{ 'plain_text' => 'An image caption', 'annotations' => {} }]
+      html = render_image('image_src.jpg', nil, caption, 'file', class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('figure.custom-class')
     end
   end
 
@@ -172,6 +190,15 @@ RSpec.describe NotionRails::Renderers do
       expect(video_element[:src]).to match(/video_src.mp4/)
       expect(video_element[:controls]).to eq('controls')
     end
+
+    it 'adds custom CSS class to the video' do
+      caption = [{ 'plain_text' => 'A video caption', 'annotations' => {} }]
+      html = render_video('video_src.mp4', nil, caption, 'file', class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('figure.custom-class')
+    end
   end
 
   describe '#render_heading_1' do
@@ -182,6 +209,15 @@ RSpec.describe NotionRails::Renderers do
       rendered_html = Capybara.string(html)
 
       expect(rendered_html).to have_selector('h1.text-3xl.font-semibold', text: 'Heading 1')
+    end
+
+    it 'adds custom CSS class to the heading 1' do
+      rich_text = [{ 'plain_text' => 'Heading 1', 'annotations' => { 'bold' => true } }]
+      html = render_heading_1(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h1.custom-class', text: 'Heading 1')
     end
   end
 
@@ -194,6 +230,15 @@ RSpec.describe NotionRails::Renderers do
 
       expect(rendered_html).to have_selector('h2.text-2xl.font-semibold', text: 'Heading 2')
     end
+
+    it 'adds custom CSS class to the heading 2' do
+      rich_text = [{ 'plain_text' => 'Heading 2', 'annotations' => { 'italic' => true } }]
+      html = render_heading_2(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h2.custom-class', text: 'Heading 2')
+    end
   end
 
   describe '#render_heading_3' do
@@ -205,16 +250,35 @@ RSpec.describe NotionRails::Renderers do
 
       expect(rendered_html).to have_selector('h3.text-xl.font-semibold', text: 'Heading 3')
     end
+
+    it 'adds custom CSS class to the heading 3' do
+      rich_text = [{ 'plain_text' => 'Heading 3', 'annotations' => { 'underline' => true } }]
+      html = render_heading_3(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h3.custom-class', text: 'Heading 3')
+    end
   end
 
   describe '#render_code' do
     it 'renders a code block with rich text' do
       rich_text = [{ 'plain_text' => 'puts "Hello, world!"', 'annotations' => { 'code' => true } }]
-      html = render_code(rich_text)
+      html = render_code(rich_text, language: 'ruby')
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('pre.border-2.p-6.rounded', text: 'puts "Hello, world!"')
+      expect(rendered_html).to have_selector('pre.border-2.p-6.rounded.w-full.overflow-x-auto.language-ruby',
+        text: 'puts "Hello, world!"')
+    end
+
+    it 'adds custom CSS class to the code block' do
+      rich_text = [{ 'plain_text' => 'puts "Hello, world!"', 'annotations' => { 'code' => true } }]
+      html = render_code(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('pre.custom-class', text: 'puts "Hello, world!"')
     end
   end
 
@@ -227,6 +291,15 @@ RSpec.describe NotionRails::Renderers do
 
       expect(rendered_html).to have_selector('ul.list-disc.break-words li', text: 'List item')
     end
+
+    it 'adds custom CSS class to the bulleted list item' do
+      rich_text = [{ 'plain_text' => 'List item', 'annotations' => {} }]
+      html = render_bulleted_list_item(rich_text, [], [], class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('ul.list-disc.break-words li.custom-class', text: 'List item')
+    end
   end
 
   describe '#render_numbered_list_item' do
@@ -238,6 +311,15 @@ RSpec.describe NotionRails::Renderers do
 
       expect(rendered_html).to have_selector('ol.list-decimal li', text: 'List item')
     end
+
+    it 'adds custom CSS class to the numbered list item' do
+      rich_text = [{ 'plain_text' => 'List item', 'annotations' => {} }]
+      html = render_numbered_list_item(rich_text, [], [], class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('ol.list-decimal li.custom-class', text: 'List item')
+    end
   end
 
   describe '#render_quote' do
@@ -248,6 +330,16 @@ RSpec.describe NotionRails::Renderers do
       rendered_html = Capybara.string(html)
 
       expect(rendered_html).to have_selector('cite p.border-l-4.border-black.px-5.py-1', text: 'A quote')
+    end
+
+    it 'adds custom CSS classes when options with class key are passed' do
+      rich_text = [{ 'plain_text' => 'A styled quote', 'annotations' => {} }]
+      options = { class: 'custom-quote-class' }
+      html = render_quote(rich_text, options)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('cite p.custom-quote-class', text: 'A styled quote')
     end
   end
 
@@ -261,6 +353,16 @@ RSpec.describe NotionRails::Renderers do
       expect(rendered_html).to have_selector('div.p-4.rounded.bg-neutral-200.mt-4', text: 'A callout')
       expect(rendered_html).to have_selector('span', text: '⚠️')
     end
+
+    it 'adds custom CSS classes when options with class key are passed' do
+      rich_text = [{ 'plain_text' => 'A styled callout', 'annotations' => {} }]
+      options = { class: 'custom-callout-class' }
+      html = render_callout(rich_text, '⚠️', options)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('div.custom-callout-class', text: 'A styled callout')
+    end
   end
 
   describe '#render_title' do
@@ -272,6 +374,16 @@ RSpec.describe NotionRails::Renderers do
 
       expect(rendered_html).to have_selector('h1.text-3xl.font-semibold', text: 'Title')
     end
+
+    it 'adds custom CSS classes when options with class key are passed' do
+      rich_text = [{ 'plain_text' => 'Styled Title', 'annotations' => { 'bold' => true } }]
+      options = { class: 'custom-title-class' }
+      html = render_title(rich_text, options)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h1.custom-title-class', text: 'Styled Title')
+    end
   end
 
   describe '#render_date' do
@@ -282,6 +394,16 @@ RSpec.describe NotionRails::Renderers do
       rendered_html = Capybara.string(html)
 
       expect(rendered_html).to have_selector('p', text: 'July 13, 2023')
+    end
+
+    it 'adds custom CSS classes when options with class key are passed' do
+      date = Date.new(2023, 7, 13)
+      options = { class: 'custom-date-class' }
+      html = render_date(date, options)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('p.custom-date-class', text: 'July 13, 2023')
     end
   end
 end

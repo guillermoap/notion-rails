@@ -66,9 +66,9 @@ module NotionRails
         render_numbered_list_item(rich_text, @siblings, @children, class: options[:numbered_list_item])
       when 'quote' then render_quote(rich_text, class: options[:quote])
       when 'callout' then render_callout(rich_text, icon, class: options[:callout])
-      when 'code' then render_code(rich_text, class: "#{options[:code]} language-#{@properties["language"]}")
-      when 'image' then render_image(*multi_media)
-      when 'video' then render_video(*multi_media)
+      when 'code' then render_code(rich_text, class: options[:code], language: @properties['language'])
+      when 'image' then render_image(*multi_media, class: options[:image])
+      when 'video' then render_video(*multi_media, class: options[:video])
       else
         'Error'
       end
