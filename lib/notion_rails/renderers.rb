@@ -91,9 +91,7 @@ module NotionRails
     end
 
     def render_bulleted_list_item(rich_text_array, _siblings, children, options = {})
-      pre_options = options
-      pre_options[:class] = "list-disc break-words #{pre_options[:class]}"
-      content_tag(:ul, pre_options) do
+      content_tag(:ul, class: 'list-disc break-words', **options.except(:class)) do
         content = content_tag(:li, options) do
           text_renderer(rich_text_array)
         end
@@ -108,9 +106,7 @@ module NotionRails
     end
 
     def render_numbered_list_item(rich_text_array, siblings, children, options = {})
-      pre_options = options
-      pre_options[:class] = "list-decimal #{pre_options[:class]}"
-      content_tag(:ol, pre_options) do
+      content_tag(:ol, class: 'list-decimal', **options.except(:class)) do
         render_list_items(:numbered_list_item, rich_text_array, siblings, children, options)
       end
     end
@@ -134,13 +130,9 @@ module NotionRails
     end
 
     def render_quote(rich_text_array, options = {})
-      div_options = options.dup
-      pre_options = options.dup
-      div_options[:class] = "mt-4 #{options[:class]}"
-      content_tag(:div, div_options) do
-        pre_options[:class] = "border-l-4 border-black px-5 py-1 #{options[:class]}"
+      content_tag(:div, class: 'mt-4', **options) do
         content_tag(:cite) do
-          content_tag(:p, pre_options) do
+          content_tag(:p, class: 'border-l-4 border-black px-5 py-1', **options) do
             text_renderer(rich_text_array)
           end
         end
@@ -148,9 +140,7 @@ module NotionRails
     end
 
     def render_callout(rich_text_array, icon, options = {})
-      pre_options = options
-      pre_options[:class] = "p-4 rounded bg-neutral-200 mt-4 #{pre_options[:class]}"
-      content_tag(:div, pre_options) do
+      content_tag(:div, class: 'p-4 rounded bg-neutral-200 mt-4', **options) do
         content = tag.span(icon, class: 'pr-2')
         content += text_renderer(rich_text_array)
         content
