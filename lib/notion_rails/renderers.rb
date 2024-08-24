@@ -80,18 +80,17 @@ module NotionRails
 
     def render_code(rich_text_array, options = {})
       # TODO: render captions
-      pre_options = options
-      pre_options[:class] = "border-2 p-6 rounded #{pre_options[:class]}"
       content_tag(:div, class: 'mt-4', data: { controller: 'highlight' }) do
         content_tag(:div, data: { highlight_target: 'source' }) do
-          content_tag(:pre, pre_options) do
+          content_tag(:pre, class: "border-2 p-6 rounded w-full overflow-x-auto language-#{options[:language]}",
+**options) do
             text_renderer(rich_text_array, options)
           end
         end
       end
     end
 
-    def render_bulleted_list_item(rich_text_array, siblings, children, options = {})
+    def render_bulleted_list_item(rich_text_array, _siblings, children, options = {})
       pre_options = options
       pre_options[:class] = "list-disc break-words #{pre_options[:class]}"
       content_tag(:ul, pre_options) do
@@ -158,7 +157,7 @@ module NotionRails
       end
     end
 
-    def render_image(src, expiry_time, caption, type, options = {})
+    def render_image(src, _expiry_time, caption, _type, options = {})
       content_tag(:figure, options) do
         content = tag.img(src: src, alt: '')
         content += tag.figcaption(text_renderer(caption))
@@ -166,7 +165,7 @@ module NotionRails
       end
     end
 
-    def render_video(src, expiry_time, caption, type, options = {})
+    def render_video(src, _expiry_time, caption, type, options = {})
       content_tag(:figure, options) do
         content = if type == 'file'
                     video_tag(src, controls: true)

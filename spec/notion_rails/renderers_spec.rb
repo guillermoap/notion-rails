@@ -264,11 +264,12 @@ RSpec.describe NotionRails::Renderers do
   describe '#render_code' do
     it 'renders a code block with rich text' do
       rich_text = [{ 'plain_text' => 'puts "Hello, world!"', 'annotations' => { 'code' => true } }]
-      html = render_code(rich_text)
+      html = render_code(rich_text, language: 'ruby')
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('pre.border-2.p-6.rounded', text: 'puts "Hello, world!"')
+      expect(rendered_html).to have_selector('pre.border-2.p-6.rounded.w-full.overflow-x-auto.language-ruby',
+        text: 'puts "Hello, world!"')
     end
 
     it 'adds custom CSS class to the code block' do
