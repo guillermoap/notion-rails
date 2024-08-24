@@ -140,9 +140,11 @@ module NotionRails
     end
 
     def render_callout(rich_text_array, icon, options = {})
-      content_tag(:div, class: 'p-4 rounded mt-4', **options) do
-        content = tag.span(icon, class: 'mr-2')
-        content += text_renderer(rich_text_array)
+      content_tag(:div, class: 'flex flex-column p-4 rounded mt-4', **options) do
+        content = tag.span(icon, class: 'mr-4')
+        content += tag.div do
+          text_renderer(rich_text_array)
+        end
         content
       end
     end

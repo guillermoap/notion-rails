@@ -350,8 +350,8 @@ RSpec.describe NotionRails::Renderers do
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('div.p-4.rounded.mt-4', text: 'A callout')
-      expect(rendered_html).to have_selector('span', text: '⚠️')
+      expect(rendered_html).to have_selector('div.flex.flex-column.p-4.rounded.mt-4', text: 'A callout')
+      expect(rendered_html).to have_selector('span.mr-4', text: '⚠️')
     end
 
     it 'adds custom CSS classes when options with class key are passed' do
