@@ -350,7 +350,7 @@ RSpec.describe NotionRails::Renderers do
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('div.p-4.rounded.bg-neutral-200.mt-4', text: 'A callout')
+      expect(rendered_html).to have_selector('div.p-4.rounded.mt-4', text: 'A callout')
       expect(rendered_html).to have_selector('span', text: '⚠️')
     end
 

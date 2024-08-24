@@ -80,7 +80,7 @@ module NotionRails
 
     def render_code(rich_text_array, options = {})
       # TODO: render captions
-      content_tag(:div, class: 'mt-4', data: { controller: 'highlight' }) do
+      content_tag(:div, data: { controller: 'highlight' }) do
         content_tag(:div, data: { highlight_target: 'source' }) do
           content_tag(:pre, class: "border-2 p-6 rounded w-full overflow-x-auto language-#{options[:language]}",
 **options) do
@@ -130,7 +130,7 @@ module NotionRails
     end
 
     def render_quote(rich_text_array, options = {})
-      content_tag(:div, class: 'mt-4', **options) do
+      content_tag(:div, options) do
         content_tag(:cite) do
           content_tag(:p, class: 'border-l-4 border-black px-5 py-1', **options) do
             text_renderer(rich_text_array)
@@ -140,8 +140,8 @@ module NotionRails
     end
 
     def render_callout(rich_text_array, icon, options = {})
-      content_tag(:div, class: 'p-4 rounded bg-neutral-200 mt-4', **options) do
-        content = tag.span(icon, class: 'pr-2')
+      content_tag(:div, class: 'p-4 rounded mt-4', **options) do
+        content = tag.span(icon, class: 'mr-2')
         content += text_renderer(rich_text_array)
         content
       end
