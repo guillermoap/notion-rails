@@ -13,6 +13,7 @@ module NotionRails
       bulleted_list_item: 'list-disc break-words',
       callout: 'flex flex-column p-4 rounded mt-4',
       code: 'border-2 p-6 rounded w-full overflow-x-auto',
+      date: '',
       heading_1: 'mb-4 mt-6 text-3xl font-semibold',
       heading_2: 'mb-4 mt-6 text-2xl font-semibold',
       heading_3: 'mb-2 mt-6 text-xl font-semibold',
@@ -168,10 +169,10 @@ module NotionRails
     private
 
     def css_class_for(type, options)
-      if options[:override]
+      if options[:override_class]
         options[:class]
       else
-        "#{DEFAULT_CSS_CLASSES[type]} #{options[:class]}".lstrip
+        "#{DEFAULT_CSS_CLASSES[type]} #{options[:class]}".strip
       end
     end
 
