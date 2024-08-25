@@ -3,11 +3,11 @@
 require 'spec_helper'
 
 RSpec.describe NotionRails::Service do
-  let(:service) { described_class.new }
+  let(:service) { described_class }
 
   describe '#initialize' do
     it 'initializes a Notion::Client with the correct token' do
-      client = service.instance_variable_get(:@client)
+      client = service.send(:client)
       expect(client).to be_a(Notion::Client)
       expect(client.token).to eq(NotionRails.config.notion_api_token)
     end
