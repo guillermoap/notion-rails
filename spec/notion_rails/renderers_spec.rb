@@ -134,276 +134,400 @@ RSpec.describe NotionRails::Renderers do
       end
     end
   end
-
-  describe '#render_paragraph' do
-    it 'renders a paragraph with rich text' do
-      rich_text = [{ 'plain_text' => 'Hello, world!', 'annotations' => { 'bold' => true } }]
-      html = render_paragraph(rich_text)
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('p')
-      expect(rendered_html).to have_selector('span.font-bold', text: 'Hello, world!')
-    end
-
-    it 'adds custom CSS class to the paragraph' do
-      rich_text = [{ 'plain_text' => 'Hello, world!', 'annotations' => { 'bold' => true } }]
-      html = render_paragraph(rich_text, class: 'custom-class')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('p.custom-class')
-    end
-  end
-
-  describe '#render_image' do
-    it 'renders an image with a caption' do
-      caption = [{ 'plain_text' => 'An image caption', 'annotations' => {} }]
-      html = render_image('image_src.jpg', nil, caption, 'file')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('figure')
-      expect(rendered_html).to have_selector('img[src="image_src.jpg"]')
-      expect(rendered_html).to have_selector('figcaption', text: 'An image caption')
-    end
-
-    it 'adds custom CSS class to the image' do
-      caption = [{ 'plain_text' => 'An image caption', 'annotations' => {} }]
-      html = render_image('image_src.jpg', nil, caption, 'file', class: 'custom-class')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('figure.custom-class')
-    end
-  end
-
-  describe '#render_video' do
-    it 'renders a video with a caption' do
-      caption = [{ 'plain_text' => 'A video caption', 'annotations' => {} }]
-      html = render_video('video_src.mp4', nil, caption, 'file')
-
-      rendered_html = Capybara.string(html)
-      expect(rendered_html).to have_selector('figure')
-      expect(rendered_html).to have_selector('figcaption', text: 'A video caption')
-      video_element = rendered_html.find('video')
-      expect(video_element[:src]).to match(/video_src.mp4/)
-      expect(video_element[:controls]).to eq('controls')
-    end
-
-    it 'adds custom CSS class to the video' do
-      caption = [{ 'plain_text' => 'A video caption', 'annotations' => {} }]
-      html = render_video('video_src.mp4', nil, caption, 'file', class: 'custom-class')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('figure.custom-class')
-    end
-  end
-
-  describe '#render_heading_1' do
-    it 'renders a heading 1 with rich text' do
-      rich_text = [{ 'plain_text' => 'Heading 1', 'annotations' => { 'bold' => true } }]
-      html = render_heading_1(rich_text)
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('h1.text-3xl.font-semibold', text: 'Heading 1')
-    end
-
-    it 'adds custom CSS class to the heading 1' do
-      rich_text = [{ 'plain_text' => 'Heading 1', 'annotations' => { 'bold' => true } }]
-      html = render_heading_1(rich_text, class: 'custom-class')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('h1.custom-class', text: 'Heading 1')
-    end
-  end
-
-  describe '#render_heading_2' do
-    it 'renders a heading 2 with rich text' do
-      rich_text = [{ 'plain_text' => 'Heading 2', 'annotations' => { 'italic' => true } }]
-      html = render_heading_2(rich_text)
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('h2.text-2xl.font-semibold', text: 'Heading 2')
-    end
-
-    it 'adds custom CSS class to the heading 2' do
-      rich_text = [{ 'plain_text' => 'Heading 2', 'annotations' => { 'italic' => true } }]
-      html = render_heading_2(rich_text, class: 'custom-class')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('h2.custom-class', text: 'Heading 2')
-    end
-  end
-
-  describe '#render_heading_3' do
-    it 'renders a heading 3 with rich text' do
-      rich_text = [{ 'plain_text' => 'Heading 3', 'annotations' => { 'underline' => true } }]
-      html = render_heading_3(rich_text)
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('h3.text-xl.font-semibold', text: 'Heading 3')
-    end
-
-    it 'adds custom CSS class to the heading 3' do
-      rich_text = [{ 'plain_text' => 'Heading 3', 'annotations' => { 'underline' => true } }]
-      html = render_heading_3(rich_text, class: 'custom-class')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('h3.custom-class', text: 'Heading 3')
-    end
-  end
-
-  describe '#render_code' do
-    it 'renders a code block with rich text' do
-      rich_text = [{ 'plain_text' => 'puts "Hello, world!"', 'annotations' => { 'code' => true } }]
-      html = render_code(rich_text, language: 'ruby')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('pre.border-2.p-6.rounded.w-full.overflow-x-auto.language-ruby',
-        text: 'puts "Hello, world!"')
-    end
-
-    it 'adds custom CSS class to the code block' do
-      rich_text = [{ 'plain_text' => 'puts "Hello, world!"', 'annotations' => { 'code' => true } }]
-      html = render_code(rich_text, class: 'custom-class')
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('pre.custom-class', text: 'puts "Hello, world!"')
-    end
-  end
-
   describe '#render_bulleted_list_item' do
+    let(:rich_text) { [{ 'plain_text' => 'List item', 'annotations' => {} }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:bulleted_list_item].gsub(' ', '.') }
+
     it 'renders a bulleted list item with rich text' do
-      rich_text = [{ 'plain_text' => 'List item', 'annotations' => {} }]
       html = render_bulleted_list_item(rich_text, [], [])
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('ul.list-disc.break-words li', text: 'List item')
+      expect(rendered_html).to have_selector("ul.#{default_class} li", text: 'List item')
     end
 
-    it 'adds custom CSS class to the bulleted list item' do
-      rich_text = [{ 'plain_text' => 'List item', 'annotations' => {} }]
+    it 'concatenates default and custom classes' do
       html = render_bulleted_list_item(rich_text, [], [], class: 'custom-class')
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('ul.list-disc.break-words li.custom-class', text: 'List item')
+      expect(rendered_html).to have_selector("ul.#{default_class} li.custom-class", text: 'List item')
+    end
+
+    it 'overrides the default class' do
+      html = render_bulleted_list_item(rich_text, [], [], class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('ul li.custom-class', text: 'List item')
+      expect(rendered_html).not_to have_selector("ul.#{default_class} li", text: 'List item')
     end
   end
+  describe '#render_code' do
+    let(:rich_text) { [{ 'plain_text' => 'puts "Hello, world!"', 'annotations' => { 'code' => true } }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:code].gsub(' ', '.') }
 
-  describe '#render_numbered_list_item' do
-    it 'renders a numbered list item with rich text' do
-      rich_text = [{ 'plain_text' => 'List item', 'annotations' => {} }]
-      html = render_numbered_list_item(rich_text, [], [])
+    it 'renders a code block with rich text' do
+      html = render_code(rich_text, language: 'ruby')
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('ol.list-decimal li', text: 'List item')
+      expect(rendered_html).to have_selector("pre.#{default_class}.language-ruby", text: 'puts "Hello, world!"')
     end
 
-    it 'adds custom CSS class to the numbered list item' do
-      rich_text = [{ 'plain_text' => 'List item', 'annotations' => {} }]
-      html = render_numbered_list_item(rich_text, [], [], class: 'custom-class')
+    it 'concatenates default and custom classes' do
+      html = render_code(rich_text, class: 'custom-class')
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('ol.list-decimal li.custom-class', text: 'List item')
-    end
-  end
-
-  describe '#render_quote' do
-    it 'renders a quote with rich text' do
-      rich_text = [{ 'plain_text' => 'A quote', 'annotations' => {} }]
-      html = render_quote(rich_text)
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('cite p.border-l-4.border-black.px-5.py-1', text: 'A quote')
+      expect(rendered_html).to have_selector("pre.#{default_class}.custom-class", text: 'puts "Hello, world!"')
     end
 
-    it 'adds custom CSS classes when options with class key are passed' do
-      rich_text = [{ 'plain_text' => 'A styled quote', 'annotations' => {} }]
-      options = { class: 'custom-quote-class' }
-      html = render_quote(rich_text, options)
+    it 'overrides the default class' do
+      html = render_code(rich_text, class: 'custom-class', override_class: true)
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('cite p.custom-quote-class', text: 'A styled quote')
+      expect(rendered_html).to have_selector('pre.custom-class', text: 'puts "Hello, world!"')
+      expect(rendered_html).not_to have_selector("pre.#{default_class}", text: 'puts "Hello, world!"')
     end
   end
-
   describe '#render_callout' do
+    let(:rich_text) { [{ 'plain_text' => 'A callout', 'annotations' => {} }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:callout].gsub(' ', '.') }
+
     it 'renders a callout with rich text and icon' do
-      rich_text = [{ 'plain_text' => 'A callout', 'annotations' => {} }]
       html = render_callout(rich_text, '⚠️')
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('div.flex.flex-column.p-4.rounded.mt-4', text: 'A callout')
+      expect(rendered_html).to have_selector("div.#{default_class}", text: 'A callout')
       expect(rendered_html).to have_selector('span.mr-4', text: '⚠️')
     end
 
-    it 'adds custom CSS classes when options with class key are passed' do
-      rich_text = [{ 'plain_text' => 'A styled callout', 'annotations' => {} }]
+    it 'concatenates custom CSS classes with default classes' do
       options = { class: 'custom-callout-class' }
       html = render_callout(rich_text, '⚠️', options)
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('div.custom-callout-class', text: 'A styled callout')
+      expect(rendered_html).to have_selector("div.#{default_class}.custom-callout-class", text: 'A callout')
     end
-  end
 
-  describe '#render_title' do
-    it 'renders a title as heading 1' do
-      rich_text = [{ 'plain_text' => 'Title', 'annotations' => { 'bold' => true } }]
-      html = render_title(rich_text)
+    it 'overrides default CSS classes when custom classes are provided' do
+      options = { class: 'custom-class flex p-8' }
+      html = render_callout(rich_text, '⚠️', options)
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('h1.text-3xl.font-semibold', text: 'Title')
-    end
-
-    it 'adds custom CSS classes when options with class key are passed' do
-      rich_text = [{ 'plain_text' => 'Styled Title', 'annotations' => { 'bold' => true } }]
-      options = { class: 'custom-title-class' }
-      html = render_title(rich_text, options)
-
-      rendered_html = Capybara.string(html)
-
-      expect(rendered_html).to have_selector('h1.custom-title-class', text: 'Styled Title')
+      expect(rendered_html).to have_selector('div.custom-class.flex.p-8', text: 'A callout')
     end
   end
-
   describe '#render_date' do
+    let(:date) { Date.new(2023, 7, 13) }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:date].gsub(' ', '.') }
+
     it 'renders a date' do
-      date = Date.new(2023, 7, 13)
       html = render_date(date)
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('p', text: 'July 13, 2023')
+      expect(rendered_html).to have_selector("p#{default_class.blank? ? "" : "."}#{default_class}",
+        text: 'July 13, 2023')
     end
 
-    it 'adds custom CSS classes when options with class key are passed' do
-      date = Date.new(2023, 7, 13)
+    it 'concatenates custom CSS classes with default classes' do
       options = { class: 'custom-date-class' }
       html = render_date(date, options)
 
       rendered_html = Capybara.string(html)
 
-      expect(rendered_html).to have_selector('p.custom-date-class', text: 'July 13, 2023')
+      expect(rendered_html).to have_selector("p#{default_class.blank? ? "" : "."}#{default_class}.custom-date-class",
+        text: 'July 13, 2023')
+    end
+
+    it 'overrides default CSS classes when custom classes are provided' do
+      options = { class: 'custom-class text-blue-500' }
+      html = render_date(date, options)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('p.custom-class.text-blue-500', text: 'July 13, 2023')
+    end
+  end
+
+  describe '#render_heading_1' do
+    let(:rich_text) { [{ 'plain_text' => 'Heading 1', 'annotations' => { 'bold' => true } }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:heading_1].gsub(' ', '.') }
+
+    it 'renders a heading 1 with rich text' do
+      html = render_heading_1(rich_text)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h1.#{default_class}", text: 'Heading 1')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_heading_1(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h1.#{default_class}.custom-class", text: 'Heading 1')
+    end
+
+    it 'overrides the default class' do
+      html = render_heading_1(rich_text, class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h1.custom-class', text: 'Heading 1')
+      expect(rendered_html).not_to have_selector("h1.#{default_class}", text: 'Heading 1')
+    end
+  end
+
+  describe '#render_heading_2' do
+    let(:rich_text) { [{ 'plain_text' => 'Heading 2', 'annotations' => { 'italic' => true } }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:heading_2].gsub(' ', '.') }
+
+    it 'renders a heading 2 with rich text' do
+      html = render_heading_2(rich_text)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h2.#{default_class}", text: 'Heading 2')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_heading_2(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h2.#{default_class}.custom-class", text: 'Heading 2')
+    end
+
+    it 'overrides the default class' do
+      html = render_heading_2(rich_text, class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h2.custom-class', text: 'Heading 2')
+      expect(rendered_html).not_to have_selector("h2.#{default_class}", text: 'Heading 2')
+    end
+  end
+
+  describe '#render_heading_3' do
+    let(:rich_text) { [{ 'plain_text' => 'Heading 3', 'annotations' => { 'underline' => true } }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:heading_3].gsub(' ', '.') }
+
+    it 'renders a heading 3 with rich text' do
+      html = render_heading_3(rich_text)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h3.#{default_class}", text: 'Heading 3')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_heading_3(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h3.#{default_class}.custom-class", text: 'Heading 3')
+    end
+
+    it 'overrides the default class' do
+      html = render_heading_3(rich_text, class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h3.custom-class', text: 'Heading 3')
+      expect(rendered_html).not_to have_selector("h3.#{default_class}", text: 'Heading 3')
+    end
+  end
+  describe '#render_image' do
+    let(:caption) { [{ 'plain_text' => 'An image caption', 'annotations' => {} }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:image].gsub(' ', '.') }
+
+    it 'renders an image with a caption' do
+      html = render_image('image_src.jpg', nil, caption, 'file')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("figure#{default_class.blank? ? "" : "."}#{default_class}")
+      expect(rendered_html).to have_selector('img[src="image_src.jpg"]')
+      expect(rendered_html).to have_selector('figcaption', text: 'An image caption')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_image('image_src.jpg', nil, caption, 'file', class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("figure#{default_class.blank? ? "" : "."}#{default_class}.custom-class")
+    end
+
+    it 'overrides the default class' do
+      html = render_image('image_src.jpg', nil, caption, 'file', class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('figure.custom-class')
+      # TODO: When/if image has a default class add expect to test that it doesn't render when overriden
+    end
+  end
+
+  describe '#render_numbered_list_item' do
+    let(:rich_text) { [{ 'plain_text' => 'List item', 'annotations' => {} }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:numbered_list_item].gsub(' ', '.') }
+
+    it 'renders a numbered list item with rich text' do
+      html = render_numbered_list_item(rich_text, [], [])
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("ol.#{default_class} li", text: 'List item')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_numbered_list_item(rich_text, [], [], class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("ol.#{default_class} li.custom-class", text: 'List item')
+    end
+
+    it 'overrides the default class' do
+      html = render_numbered_list_item(rich_text, [], [], class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('ol li.custom-class', text: 'List item')
+      expect(rendered_html).not_to have_selector("ol.#{default_class} li", text: 'List item')
+    end
+  end
+  describe '#render_paragraph' do
+    let(:rich_text) { [{ 'plain_text' => 'Hello, world!', 'annotations' => { 'bold' => true } }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:paragraph].gsub(' ', '.') }
+
+    it 'renders a paragraph with rich text' do
+      html = render_paragraph(rich_text)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("p#{default_class.blank? ? "" : "."}#{default_class}")
+      expect(rendered_html).to have_selector('span.font-bold', text: 'Hello, world!')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_paragraph(rich_text, class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("p#{default_class.blank? ? "" : "."}#{default_class}.custom-class")
+    end
+
+    it 'overrides the default class' do
+      html = render_paragraph(rich_text, class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('p.custom-class')
+      # TODO: When/if paragraph has a default class add expect to test that it doesn't render when overriden
+    end
+  end
+  describe '#render_quote' do
+    let(:rich_text) { [{ 'plain_text' => 'A quote', 'annotations' => {} }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:quote].gsub(' ', '.') }
+
+    it 'renders a quote with rich text' do
+      html = render_quote(rich_text)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("cite p.#{default_class}", text: 'A quote')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_quote(rich_text, class: 'custom-quote-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("cite p.#{default_class}.custom-quote-class", text: 'A quote')
+    end
+
+    it 'overrides the default class' do
+      html = render_quote(rich_text, class: 'custom-quote-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('cite p.custom-quote-class', text: 'A quote')
+      expect(rendered_html).not_to have_selector("cite p.#{default_class}", text: 'A quote')
+    end
+  end
+
+  describe '#render_title' do
+    let(:rich_text) { [{ 'plain_text' => 'Title', 'annotations' => { 'bold' => true } }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:heading_1].gsub(' ', '.') }
+
+    it 'renders a title as heading 1' do
+      html = render_title(rich_text, {})
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h1#{default_class.blank? ? "" : "."}#{default_class}", text: 'Title')
+    end
+
+    it 'concatenates custom CSS classes with default classes' do
+      options = { class: 'custom-title-class' }
+      html = render_title(rich_text, options)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("h1#{default_class.blank? ? "" : "."}#{default_class}.custom-title-class",
+        text: 'Title')
+    end
+
+    it 'overrides default CSS classes when custom classes are provided' do
+      options = { class: 'custom-class font-bold' }
+      html = render_title(rich_text, options)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('h1.custom-class.font-bold', text: 'Title')
+    end
+  end
+  describe '#render_video' do
+    let(:caption) { [{ 'plain_text' => 'A video caption', 'annotations' => {} }] }
+    let(:default_class) { described_class::DEFAULT_CSS_CLASSES[:video].gsub(' ', '.') }
+
+    it 'renders a video with a caption' do
+      html = render_video('video_src.mp4', nil, caption, 'file')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("figure#{default_class.blank? ? "" : "."}#{default_class}")
+      expect(rendered_html).to have_selector('figcaption', text: 'A video caption')
+
+      video_element = rendered_html.find('video')
+      expect(video_element[:src]).to match(/video_src.mp4/)
+      expect(video_element[:controls]).to eq('controls')
+    end
+
+    it 'concatenates default and custom classes' do
+      html = render_video('video_src.mp4', nil, caption, 'file', class: 'custom-class')
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector("figure#{default_class.blank? ? "" : "."}#{default_class}.custom-class")
+    end
+
+    it 'overrides the default class' do
+      html = render_video('video_src.mp4', nil, caption, 'file', class: 'custom-class', override_class: true)
+
+      rendered_html = Capybara.string(html)
+
+      expect(rendered_html).to have_selector('figure.custom-class')
+      # TODO: When/if viceo has a default class add expect to test that it doesn't render when overriden
     end
   end
 end
