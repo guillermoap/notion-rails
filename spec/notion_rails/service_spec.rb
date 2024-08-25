@@ -90,24 +90,24 @@ RSpec.describe NotionRails::Service do
     end
   end
 
-  describe '#get_articles' do
-    subject { service.get_articles(tag: 'test', page_size: page_size) }
+  describe '#get_pages' do
+    subject { service.get_pages(tag: 'test', page_size: page_size) }
 
     let(:page_size) { 10 }
 
-    it 'queries the Notion database and returns articles', vcr: { cassette_name: 'get_articles' } do
+    it 'queries the Notion database and returns pages', vcr: { cassette_name: 'get_pages' } do
       expect(subject).to be_an(Array)
       expect(subject.first).to be_a(NotionRails::BasePage)
     end
   end
 
-  describe '#get_article' do
-    subject { service.get_article(id) }
+  describe '#get_page' do
+    subject { service.get_page(id) }
 
-    let(:id) { service.get_articles(tag: 'test', page_size: 10).first.id }
+    let(:id) { service.get_pages(tag: 'test', page_size: 10).first.id }
 
     it 'returns a NotionRails::Page with the correct base_page and base_blocks',
-      vcr: { cassette_name: 'get_article' } do
+      vcr: { cassette_name: 'get_page' } do
       expect(subject).to be_a(NotionRails::Page)
       expect(subject.metadata).to be_a(NotionRails::BasePage)
       expect(subject.blocks).to be_an(Array)
@@ -117,7 +117,7 @@ RSpec.describe NotionRails::Service do
   describe '#get_blocks' do
     subject { service.get_blocks(id) }
 
-    let(:id) { service.get_articles(tag: 'test', page_size: 10).first.id }
+    let(:id) { service.get_pages(tag: 'test', page_size: 10).first.id }
 
     it 'returns an array of blocks', vcr: { cassette_name: 'get_blocks' } do
       expect(subject).to be_an(Array)

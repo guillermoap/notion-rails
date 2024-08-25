@@ -3,9 +3,9 @@
 module NotionRails
   class Service
     class << self
-      # Generates the default query for fetching articles
-      # @param tag [String, nil] The tag to filter articles by, or nil to include all tags
-      # @param slug [String, nil] The slug to filter articles by, or nil to include all slugs
+      # Generates the default query for fetching pages
+      # @param tag [String, nil] The tag to filter pages by, or nil to include all tags
+      # @param slug [String, nil] The slug to filter pages by, or nil to include all slugs
       # @return [Array<Hash>] The default query to be used in the database query
       def default_query(tag: nil, slug: nil)
         query = [
@@ -38,7 +38,7 @@ module NotionRails
         query
       end
 
-      # Provides the default sorting order for fetching articles
+      # Provides the default sorting order for fetching pages
       # @return [Hash] The default sorting criteria for database queries
       def default_sorting
         {
@@ -47,28 +47,28 @@ module NotionRails
         }
       end
 
-      # Fetches a list of articles from Notion based on provided filters
-      # @param tag [String, nil] The tag to filter articles by, or nil to include all tags
-      # @param slug [String, nil] The slug to filter articles by, or nil to include all slugs
-      # @param page_size [Integer] The number of articles to fetch per page
-      # @return [Array<NotionRails::BasePage>] The list of articles as BasePage objects
-      def get_articles(tag: nil, slug: nil, page_size: 10)
-        __get_articles(tag: tag, slug: slug, page_size: page_size)['results'].map do |page|
+      # Fetches a list of pages from Notion based on provided filters
+      # @param tag [String, nil] The tag to filter pages by, or nil to include all tags
+      # @param slug [String, nil] The slug to filter pages by, or nil to include all slugs
+      # @param page_size [Integer] The number of pages to fetch per page
+      # @return [Array<NotionRails::BasePage>] The list of pages as BasePage objects
+      def get_pages(tag: nil, slug: nil, page_size: 10)
+        __get_pages(tag: tag, slug: slug, page_size: page_size)['results'].map do |page|
           NotionRails::BasePage.new(page)
         end
       end
 
-      # Fetches a single article by its ID
-      # @param id [String] The ID of the article to fetch
-      # @return [NotionRails::Page] The article as a NotionRails::Page object
-      def get_article(id)
+      # Fetches a single page by its ID
+      # @param id [String] The ID of the page to fetch
+      # @return [NotionRails::Page] The page as a NotionRails::Page object
+      def get_page(id)
         base_page = NotionRails::BasePage.new(__get_page(id))
         base_blocks = get_blocks(id)
         NotionRails::Page.new(base_page, base_blocks)
       end
 
-      # Fetches blocks associated with a given article ID
-      # @param id [String] The ID of the article whose blocks are to be fetched
+      # Fetches blocks associated with a given page ID
+      # @param id [String] The ID of the page whose blocks are to be fetched
       # @return [Array<NotionRails::BaseBlock>] The list of blocks as BaseBlock objects
       def get_blocks(id)
         blocks = __get_blocks(id)
@@ -116,12 +116,12 @@ module NotionRails
         @client ||= Notion::Client.new(token: NotionRails.config.notion_api_token)
       end
 
-      # Retrieves articles from Notion using the client
-      # @param tag [String, nil] The tag to filter articles by
-      # @param slug [String, nil] The slug to filter articles by
-      # @param page_size [Integer] The number of articles to fetch per page
-      # @return [Hash] The response from the Notion API containing articles
-      def __get_articles(tag: nil, slug: nil, page_size: 10)
+      # Retrieves pages from Notion using the client
+      # @param tag [String, nil] The tag to filter pages by
+      # @param slug [String, nil] The slug to filter pages by
+      # @param page_size [Integer] The number of pages to fetch per page
+      # @return [Hash] The response from the Notion API containing pages
+      def __get_pages(tag: nil, slug: nil, page_size: 10)
         client.database_query(
           database_id: NotionRails.config.notion_database_id,
           sorts: [
