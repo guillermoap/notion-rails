@@ -1,39 +1,28 @@
-# NotionRails
+# NotionRails (DEPRECATED)
 
-TODO: Delete this and the text below, and describe your gem
+## ⚠️ Deprecated ⚠️
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/notion_rails`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem is no longer being developed or maintained.
 
-## Installation
+The functionality provided by `NotionRails` has been migrated to a new repository: [NotionToHtml](https://github.com/guillermoap/notion_to_html). Please update your projects to use the new gem, as this repository will no longer receive updates or support.
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+## Migration Instructions
 
-Install the gem and add to the application's Gemfile by executing:
+To switch to the new `NotionToHtml` gem, follow these steps:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+1. Remove `NotionRails` from your `Gemfile`
+2. Add `NotionToHtml` to your `Gemfile`:
+```bash
+bundle add notion_to_html
+```
+3.	Update any references to NotionRails in your code to use NotionToHtml.
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+## Repository Archive
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+This repository will remain available for historical reference, but no further updates will be made.
 
-## Usage
+## Questions or Issues?
 
-TODO: Write usage instructions here
+If you have any questions or encounter issues during migration, please open an issue in the [NotionToHtml](https://github.com/guillermoap/notion_to_html) repository.
 
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/guillermoaguirre1@gmail.com/notion_rails. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/guillermoaguirre1@gmail.com/notion_rails/blob/main/CODE_OF_CONDUCT.md).
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Notion::Rails project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/guillermoaguirre1@gmail.com/notion_rails/blob/main/CODE_OF_CONDUCT.md).
+Thank you for using NotionRails, and we hope the new NotionToHtml gem meets your needs!
